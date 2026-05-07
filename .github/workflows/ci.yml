@@ -1,0 +1,134 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  ci:
+    name: Validate · Lint · Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js and restore npm cache
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate HTML (html-validate)
+        run: npm run lint:html
+
+      - name: Lint CSS (stylelint)
+        run: npm run lint:css
+
+      - name: Lint JavaScript — scripts only (eslint)
+        run: npm run lint:js
+
+      - name: Dead link check — href="#" and empty action=""
+        run: npm run test:links
+
+      - name: Security audit
+        run: npm audit --audit-level=high
+
+      - name: Image size audit
+        run: npm run audit:images
+
+      - name: SEO files audit — sitemap.xml and robots.txt
+        run: npm run audit:seo
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      - name: Run Playwright E2E tests — all browsers
+        run: npm run test:e2e
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 14
+
+  lighthouse:
+    name: Lighthouse CI — PRs to main only
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' && github.base_ref == 'main'
+    needs: ci
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js and restore npm cache
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Wait for Vercel preview and resolve URL
+        id: vercel_url
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { owner, repo } = context.repo
+            const sha = context.payload.pull_request.head.sha
+            const maxAttempts = 30
+            const pollMs = 10_000
+
+            for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+              core.info(`Polling for Vercel deployment (attempt ${attempt}/${maxAttempts})…`)
+
+              const { data: deployments } = await github.rest.repos.listDeployments({
+                owner, repo, sha,
+                environment: 'Preview',
+                per_page: 1,
+              })
+
+              if (deployments.length > 0) {
+                const { data: statuses } = await github.rest.repos.listDeploymentStatuses({
+                  owner, repo,
+                  deployment_id: deployments[0].id,
+                  per_page: 1,
+                })
+
+                if (statuses.length > 0 && statuses[0].state === 'success' && statuses[0].environment_url) {
+                  const url = statuses[0].environment_url
+                  core.info(`Vercel preview ready: ${url}`)
+                  core.setOutput('url', url)
+                  return
+                }
+              }
+
+              if (attempt < maxAttempts) {
+                await new Promise(r => setTimeout(r, pollMs))
+              }
+            }
+
+            core.setFailed('Vercel preview URL was not available after 5 minutes')
+
+      - name: Run Lighthouse CI against Vercel preview URL
+        run: npm run lighthouse
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+          BASE_URL: ${{ steps.vercel_url.outputs.url }}
+
+      - name: Upload Lighthouse reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-report
+          path: .lighthouseci/
+          retention-days: 14

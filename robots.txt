@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://devereux-jfeelgoods-projects.vercel.app/sitemap.xml

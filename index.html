@@ -1,13 +1,45 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8"/>
 
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Devereux</title>
+    <meta name="description" content="Devereux — a fast-paced countdown color game. Click the right colors before the timer runs out. How far can you get?"/>
+    <link rel="canonical" href="https://devereux-jfeelgoods-projects.vercel.app/"/>
 
-    <meta name="theme-color" content="#000000" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta property="og:type" content="website"/>
+    <meta property="og:title" content="Devereux"/>
+    <meta property="og:description" content="A fast-paced countdown color game. Click the right colors before the timer runs out."/>
+    <meta property="og:image" content="https://devereux-jfeelgoods-projects.vercel.app/devero.png"/>
+    <meta property="og:url" content="https://devereux-jfeelgoods-projects.vercel.app/"/>
+
+    <meta name="twitter:card" content="summary_large_image"/>
+    <meta name="twitter:title" content="Devereux"/>
+    <meta name="twitter:description" content="A fast-paced countdown color game. Click the right colors before the timer runs out."/>
+    <meta name="twitter:image" content="https://devereux-jfeelgoods-projects.vercel.app/devero.png"/>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "VideoGame",
+      "name": "Devereux",
+      "description": "A fast-paced countdown color game. Click the right colors before the timer runs out.",
+      "url": "https://devereux-jfeelgoods-projects.vercel.app/",
+      "image": "https://devereux-jfeelgoods-projects.vercel.app/devero.png",
+      "genre": ["Puzzle", "Casual"],
+      "gamePlatform": "Web Browser",
+      "applicationCategory": "Game",
+      "operatingSystem": "Any",
+      "inLanguage": "en"
+    }
+    </script>
+
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+
+    <meta name="theme-color" content="#000000"/>
+    <link rel="icon" href="devero.png" type="image/png"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
 
 	<style>
 		body {
@@ -110,6 +142,9 @@
 
         //Bind keyboards/mouse/touch events
         game.getRenderer().bindStandardEvents(game.getInputManager(), window, document);
+
+        //Enable touch-to-mouse simulation for mobile support
+        game.getInputManager().touchSimulateMouse(true);
 
         //Load all assets and start the game
         game.loadAllAssets(function() {

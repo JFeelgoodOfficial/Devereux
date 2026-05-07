@@ -17,6 +17,9 @@ gdjs.winD6Code.condition2IsTrue_0 = {val:false};
 
 
 gdjs.winD6Code.mapOfGDgdjs_46winD6Code_46GDnextObjects1Objects = Hashtable.newFrom({"next": gdjs.winD6Code.GDnextObjects1});gdjs.winD6Code.eventsList0 = function(runtimeScene) {
+if (gdjs.evtTools.runtimeScene.sceneJustBegins(runtimeScene)) {
+gdjs.evtTools.sound.playMusicOnChannel(runtimeScene, "Toadlight.mp3", 1, true, 80, 1);
+}
 
 {
 

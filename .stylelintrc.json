@@ -1,0 +1,16 @@
+{
+  "extends": [
+    "stylelint-config-standard",
+    "stylelint-config-recess-order"
+  ],
+  "rules": {
+    "declaration-no-important": [true, { "severity": "warning" }],
+    "declaration-block-no-duplicate-properties": true,
+    "no-duplicate-selectors": true,
+    "color-named": "never",
+    "color-no-invalid-hex": true,
+    "shorthand-property-no-redundant-values": true,
+    "alpha-value-notation": "number",
+    "color-function-notation": "legacy"
+  }
+}

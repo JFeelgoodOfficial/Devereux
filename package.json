@@ -1,0 +1,32 @@
+{
+  "name": "devereux",
+  "version": "1.1.0",
+  "description": "Devereux — a fast-paced countdown color game",
+  "private": true,
+  "scripts": {
+    "serve": "serve . -p 3000 --no-clipboard",
+    "lint": "npm run lint:html && npm run lint:css && npm run lint:js",
+    "lint:html": "html-validate index.html",
+    "lint:css": "stylelint \"**/*.css\" --allow-empty-input",
+    "lint:js": "eslint scripts/",
+    "test:e2e": "playwright test",
+    "test:e2e:headed": "playwright test --headed",
+    "test:links": "node scripts/check-links.js",
+    "audit:images": "node scripts/check-images.js",
+    "audit:seo": "node scripts/check-seo-files.js",
+    "lighthouse": "lhci autorun --collect.url=$BASE_URL"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@lhci/cli": "^0.15.1",
+    "@playwright/test": "^1.59.1",
+    "eslint": "^10.3.0",
+    "globals": "^17.6.0",
+    "html-validate": "^10.15.0",
+    "prettier": "^3.8.3",
+    "serve": "^14.2.6",
+    "stylelint": "^17.11.0",
+    "stylelint-config-recess-order": "^7.7.0",
+    "stylelint-config-standard": "^40.0.0"
+  }
+}
