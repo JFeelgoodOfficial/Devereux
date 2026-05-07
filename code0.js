@@ -50,16 +50,6 @@ gdjs.copyArray(runtimeScene.getObjects("TimerText"), gdjs.INTROCode.GDTimerTextO
 {
 
 
-{
-{gdjs.evtTools.sound.playMusicOnChannel(runtimeScene, "Toadalation.mp3", 1, true, 50, 1);
-}}
-
-}
-
-
-{
-
-
 gdjs.INTROCode.condition0IsTrue_0.val = false;
 {
 gdjs.INTROCode.condition0IsTrue_0.val = gdjs.evtTools.input.isMouseButtonPressed(runtimeScene, "Left");
